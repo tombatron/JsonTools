@@ -87,4 +87,10 @@ public class IsTests {
     public void simpleObjectValueIsValid() {
         assertTrue(Is.json("{\"objectValue\":{\"nested\":\"object\"}}"));
     }
+
+    @Test
+    public void negativeNumbersAreValid() {
+        assertTrue(Is.json("{\"negativeNumber\":-100}"));
+    }
+    
 }

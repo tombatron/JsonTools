@@ -25,7 +25,16 @@ public class JsonReader {
      * Decrement the current position of the reader by one.
      */
     public void back() {
-        this.position--;
+        back(1);
+    }
+
+    /**
+     * Decrement the current position of the reader by a specified amount.
+     *
+     * @param decrement Number of positions to decrement.
+     */
+    public void back(int decrement) {
+        this.position -= decrement;
     }
 
     /**

@@ -73,6 +73,7 @@ public class Is {
             case '7':
             case '8':
             case '9':
+            case '-':
                 return parseNumber(reader);
             case '[':
                 return parseArray(reader);
@@ -119,6 +120,16 @@ public class Is {
                 case '7':
                 case '8':
                 case '9':
+                    break;
+                case '-':
+                    reader.back(2);
+
+                    if (reader.next() != ':') {
+                        return false;
+                    }
+
+                    reader.next();
+
                     break;
                 case '}':
                 case ']':
