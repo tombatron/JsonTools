@@ -107,6 +107,7 @@ public class Is {
 
     private static boolean parseNumber(JsonReader reader) {
         char previousChar;
+        boolean parsingExponent = false;
 
         reader.back();
 
@@ -132,6 +133,8 @@ public class Is {
                     }
 
                     reader.next();
+
+                    parsingExponent = true;
 
                     break;
                 case '+':
@@ -174,6 +177,10 @@ public class Is {
 
                     break;
                 case '.':
+                    if (parsingExponent) {
+                        return false;
+                    }
+
                     reader.back(2);
 
                     if (!isDigit(reader.next())) {

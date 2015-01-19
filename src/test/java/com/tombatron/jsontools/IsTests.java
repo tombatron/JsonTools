@@ -128,4 +128,12 @@ public class IsTests {
     public void trailingDecimalPointIsInvalid() {
         assertFalse(Is.json("{\"decimalNumber\":10.}"));
     }
+
+    @Test
+    public void decimalPointInsideExpoNotationIsInvalid() {
+        assertFalse(Is.json("{\"exponentialNotation\":100e-10.1}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100E-10.2}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100e-10.3}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100E-10.4}"));
+    }
 }
