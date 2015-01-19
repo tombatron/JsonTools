@@ -92,5 +92,16 @@ public class IsTests {
     public void negativeNumbersAreValid() {
         assertTrue(Is.json("{\"negativeNumber\":-100}"));
     }
-    
+
+    @Test
+    public void dashIsInvalidWhenNotAtFromOfNumber() {
+        assertFalse(Is.json("{\"bogusNumber\":1-00}"));
+    }
+
+    @Test
+    public void exponentialNotationIsAValidNumber() {
+        assertTrue(Is.json("{\"exponentialNotation\":100e+1}"));
+        assertTrue(Is.json("{\"exponentialNotation\":100E+1}"));
+    }
+
 }

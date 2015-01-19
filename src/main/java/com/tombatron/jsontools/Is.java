@@ -121,6 +121,29 @@ public class Is {
                 case '8':
                 case '9':
                     break;
+                case 'e':
+                case 'E':
+                    reader.back(2);
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    break;
+                case '+':
+                    reader.back(2);
+
+                    char previousChar = reader.next();
+
+                    if (!(previousChar == 'e' || previousChar == 'E')) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    break;
                 case '-':
                     reader.back(2);
 
@@ -233,6 +256,24 @@ public class Is {
         }
 
         return false;
+    }
+
+    private static boolean isDigit(char c) {
+        switch (c) {
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                return true;
+            default:
+                return false;
+        }
     }
 
 }
