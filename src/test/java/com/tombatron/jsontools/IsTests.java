@@ -176,4 +176,44 @@ public class IsTests {
     public void escapedBackspaceIsValid() {
         assertTrue(Is.json("{\"backspace\":\"\\\\b\"}"));
     }
+
+    @Test
+    public void unescapedFormFeedIsInvalid() {
+        assertFalse(Is.json("{\"formfeed\":\"\\f\"}"));
+    }
+
+    @Test
+    public void escapedFormFeedIsValid() {
+        assertTrue(Is.json("{\"formfeed\":\"\\\\f\"}"));
+    }
+
+    @Test
+    public void unescapedNewLineIsInvalid() {
+        assertFalse(Is.json("{\"newLine\":\"\\n\"}"));
+    }
+
+    @Test
+    public void escapedNewLineIsValid() {
+        assertTrue(Is.json("{\"newLine\":\"\\\\n\"}"));
+    }
+
+    @Test
+    public void unescapedCarriageReturnIsInvalid() {
+        assertFalse(Is.json("{\"carriageReturn\":\"\\r\"}"));
+    }
+
+    @Test
+    public void escapedCarriageReturnIsValid() {
+        assertTrue(Is.json("{\"carriageReturn\":\"\\\\r\"}"));
+    }
+
+    @Test
+    public void unescapedHorizontalTabIsInvalid() {
+        assertFalse(Is.json("{\"horizontalTab\":\"\\t\"}"));
+    }
+
+    @Test
+    public void escapedHorizontalTabIsValid() {
+        assertTrue(Is.json("{\"horizontalTab\":\"\\\\t\"}"));
+    }
 }
