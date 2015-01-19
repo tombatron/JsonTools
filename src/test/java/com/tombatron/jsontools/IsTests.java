@@ -114,4 +114,13 @@ public class IsTests {
         assertFalse(Is.json("{\"exponentialNotation\":100E-}"));
     }
 
+    @Test
+    public void decimalNumbersAreValid() {
+        assertTrue(Is.json("{\"decimalNumber\":0.10}"));
+    }
+
+    @Test
+    public void decimalNumbersRequireLeadingNumber() {
+        assertFalse(Is.json("{\"decimalNumber\":.10}"));
+    }
 }

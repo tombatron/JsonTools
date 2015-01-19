@@ -173,6 +173,16 @@ public class Is {
                     reader.back();
 
                     break;
+                case '.':
+                    reader.back(2);
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    break;
                 case '}':
                 case ']':
                 case ',':
