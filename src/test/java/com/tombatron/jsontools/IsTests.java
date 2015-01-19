@@ -166,4 +166,14 @@ public class IsTests {
     public void escapedSolidusIsValid() {
         assertTrue(Is.json("{\"solidus\":\"\\/\"}"));
     }
+
+    @Test
+    public void unescapedBackspaceIsInvalid() {
+        assertFalse(Is.json("{\"backspace\":\"\\b\"}"));
+    }
+
+    @Test
+    public void escapedBackspaceIsValid() {
+        assertTrue(Is.json("{\"backspace\":\"\\\\b\"}"));
+    }
 }
