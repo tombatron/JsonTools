@@ -123,4 +123,9 @@ public class IsTests {
     public void decimalNumbersRequireLeadingNumber() {
         assertFalse(Is.json("{\"decimalNumber\":.10}"));
     }
+
+    @Test
+    public void trailingDecimalPointIsInvalid() {
+        assertFalse(Is.json("{\"decimalNumber\":10.}"));
+    }
 }
