@@ -102,6 +102,16 @@ public class IsTests {
     public void exponentialNotationIsAValidNumber() {
         assertTrue(Is.json("{\"exponentialNotation\":100e+1}"));
         assertTrue(Is.json("{\"exponentialNotation\":100E+1}"));
+        assertTrue(Is.json("{\"exponentialNotation\":100e-1}"));
+        assertTrue(Is.json("{\"exponentialNotation\":100E-1}"));
+    }
+
+    @Test
+    public void trailingPlusOrDashAfterExponentIsInvalid() {
+        assertFalse(Is.json("{\"exponentialNotation\":100e+}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100E+}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100e-}"));
+        assertFalse(Is.json("{\"exponentialNotation\":100E-}"));
     }
 
 }

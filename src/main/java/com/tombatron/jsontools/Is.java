@@ -106,6 +106,8 @@ public class Is {
     }
 
     private static boolean parseNumber(JsonReader reader) {
+        char previousChar;
+
         reader.back();
 
         while (reader.hasNext()) {
@@ -135,7 +137,7 @@ public class Is {
                 case '+':
                     reader.back(2);
 
-                    char previousChar = reader.next();
+                    previousChar = reader.next();
 
                     if (!(previousChar == 'e' || previousChar == 'E')) {
                         return false;
@@ -143,15 +145,32 @@ public class Is {
 
                     reader.next();
 
+                    if(!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.back();
+
                     break;
                 case '-':
                     reader.back(2);
 
-                    if (reader.next() != ':') {
+                    previousChar = reader.next();
+
+                    boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
+                    boolean isPreviousDelimiter = previousChar == ':';
+
+                    if (!(isPreviousExponent || isPreviousDelimiter)) {
                         return false;
                     }
 
                     reader.next();
+
+                    if(!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.back();
 
                     break;
                 case '}':
