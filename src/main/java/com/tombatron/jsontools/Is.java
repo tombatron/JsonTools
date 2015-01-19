@@ -97,34 +97,31 @@ public class Is {
                     case '"':
                         return true;
                     case '\\':
-                        char nextChar = reader.next();
-
-                        switch(nextChar) {
+                        switch (reader.next()) {
+                            case 'b':
+                            case 'f':
+                            case 'n':
+                            case 'r':
+                            case 't':
                             case '\\':
-                                switch(reader.next()) {
-                                    case 'b':
-                                    case 'f':
-                                    case 'n':
-                                    case 'r':
-                                    case 't':
-                                    case '\\':
-                                        break;
-                                    case 'u':
-                                        break;
-                                }
-
-                                reader.back();
-
-                                break;
-                            case '"':
                             case '/':
+                            case '"':
+                                break;
+                            case 'u':
                                 break;
                             default:
                                 return false;
                         }
 
+                        reader.back();
+
                         break;
                     case '/':
+                    case '\b':
+                    case '\f':
+                    case '\r':
+                    case '\t':
+                    case '\n':
                         return false;
                     default:
                         break;
@@ -178,7 +175,7 @@ public class Is {
 
                     reader.next();
 
-                    if(!isDigit(reader.next())) {
+                    if (!isDigit(reader.next())) {
                         return false;
                     }
 
@@ -199,7 +196,7 @@ public class Is {
 
                     reader.next();
 
-                    if(!isDigit(reader.next())) {
+                    if (!isDigit(reader.next())) {
                         return false;
                     }
 
@@ -272,7 +269,7 @@ public class Is {
     private static boolean parseConstant(JsonReader reader) {
         reader.back();
 
-        while(reader.hasNext()) {
+        while (reader.hasNext()) {
             switch (reader.next()) {
                 case 't':
                     if (reader.next() != 'r') {
