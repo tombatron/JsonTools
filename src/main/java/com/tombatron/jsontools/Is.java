@@ -96,6 +96,36 @@ public class Is {
                 switch (reader.next()) {
                     case '"':
                         return true;
+                    case '\\':
+                        char nextChar = reader.next();
+
+                        switch(nextChar) {
+                            case '\\':
+                                switch(reader.next()) {
+                                    case 'b':
+                                    case 'f':
+                                    case 'n':
+                                    case 'r':
+                                    case 't':
+                                    case '\\':
+                                        break;
+                                    case 'u':
+                                        break;
+                                }
+
+                                reader.back();
+
+                                break;
+                            case '"':
+                            case '/':
+                                break;
+                            default:
+                                return false;
+                        }
+
+                        break;
+                    case '/':
+                        return false;
                     default:
                         break;
                 }

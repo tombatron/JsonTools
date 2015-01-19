@@ -136,4 +136,34 @@ public class IsTests {
         assertFalse(Is.json("{\"exponentialNotation\":100e-10.3}"));
         assertFalse(Is.json("{\"exponentialNotation\":100E-10.4}"));
     }
+
+    @Test
+    public void unescapedQuoteIsInvalid() {
+        assertFalse(Is.json("{\"quote\":\"\"\"}"));
+    }
+
+    @Test
+    public void escapedQuoteIsValid() {
+        assertTrue(Is.json("{\"quote\":\"\\\"\"}"));
+    }
+
+    @Test
+    public void unescapedReverseSolidusIsInvalid() {
+        assertFalse(Is.json("{\"reverseSolidus\":\"\\\"}"));
+    }
+
+    @Test
+    public void escapedReverseSolidusIsValid() {
+        assertTrue(Is.json("{\"reverseSolidus\":\"\\\\\"}"));
+    }
+
+    @Test
+    public void unescapedSolidusIsInvalid() {
+        assertFalse(Is.json("{\"solidus\":\"/\"}"));
+    }
+
+    @Test
+    public void escapedSolidusIsValid() {
+        assertTrue(Is.json("{\"solidus\":\"\\/\"}"));
+    }
 }
