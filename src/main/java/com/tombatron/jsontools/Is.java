@@ -11,7 +11,19 @@ public class Is {
     }
 
     public static boolean json(JsonReader reader) {
-        return parseObject(reader);
+        char firstChar = reader.next();
+
+        reader.back();
+
+        if (firstChar == '{') {
+            return parseObject(reader);
+        }
+
+        if (firstChar == '[') {
+            return parseArray(reader);
+        }
+
+        return false;
     }
 
     private static boolean parseObject(JsonReader reader) {
@@ -108,12 +120,26 @@ public class Is {
                             case '"':
                                 break;
                             case 'u':
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
                                 break;
                             default:
                                 return false;
                         }
-
-                        reader.back();
 
                         break;
                     case '/':
@@ -343,6 +369,35 @@ public class Is {
             default:
                 return false;
         }
+    }
+
+    private static boolean isHexDigit(char c) {
+        boolean isDecimalDigit = isDigit(c);
+        boolean isUpperHexDigit = false;
+
+        if (!isDecimalDigit) {
+            switch (c) {
+                case 'a':
+                case 'A':
+                case 'b':
+                case 'B':
+                case 'c':
+                case 'C':
+                case 'd':
+                case 'D':
+                case 'e':
+                case 'E':
+                case 'f':
+                case 'F':
+                    isUpperHexDigit = true;
+                    break;
+                default:
+                    isUpperHexDigit = false;
+                    break;
+            }
+        }
+
+        return isDecimalDigit || isUpperHexDigit;
     }
 
 }

@@ -216,4 +216,27 @@ public class IsTests {
     public void escapedHorizontalTabIsValid() {
         assertTrue(Is.json("{\"horizontalTab\":\"\\\\t\"}"));
     }
+
+    @Test
+    public void escapedUnicodeWithFourFollowingHexDigitsIsValid() {
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\uAaBb\"}"));
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\uCcDd\"}"));
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\uEeFf\"}"));
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\u1234\"}"));
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\u5678\"}"));
+        assertTrue(Is.json("{\"escapedUnicode\":\"\\u90AB\"}"));
+    }
+
+    @Test
+    public void escapedUnicodeWithoutFourFollowingHexDigitsIsInvalid() {
+        assertFalse(Is.json("{\"escapedUnicode\":\"\\uAaAG\"}"));
+        assertFalse(Is.json("{\"escapedUnicode\":\"\\uAaA A\"}"));
+        assertFalse(Is.json("{\"escapedUnicode\":\"\\u A a A A\"}"));
+        assertFalse(Is.json("{\"escapedUnicode\":\"\\uAaAP\"}"));
+    }
+
+    @Test
+    public void emptyArrayIsValid() {
+        assertTrue(Is.json("[]"));
+    }
 }

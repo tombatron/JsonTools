@@ -34,7 +34,9 @@ public class JsonReader {
      * @param decrement Number of positions to decrement.
      */
     public void back(int decrement) {
-        this.position -= decrement;
+        if (this.position - decrement >= -1) {
+            this.position -= decrement;
+        }
     }
 
     /**
@@ -87,17 +89,15 @@ public class JsonReader {
         return new JsonReader(text);
     }
 
+    /**
+     * Override toString() method to ease in debugging.
+     *
+     * @return "Current Character='{current character}'; Next Character='{next character}'"
+     */
     @Override
     public String toString() {
-        String nextCharacter;
-
-        if (position + 1 < this.length) {
-            nextCharacter = String.valueOf(this.text[position + 1]);
-        } else {
-            nextCharacter = "EOF";
-        }
-
-        String currentCharacter = String.valueOf(this.text[position]);
+        String nextCharacter = position + 1 < this.length ? String.valueOf(this.text[position + 1]) : "EOF";
+        String currentCharacter = position < 0 ? "BOF" : String.valueOf(this.text[position]);
 
         return "Current Character='" + currentCharacter + "'; Next Character='" + nextCharacter + "'";
     }
