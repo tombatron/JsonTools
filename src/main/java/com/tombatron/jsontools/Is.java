@@ -1,5 +1,8 @@
 package com.tombatron.jsontools;
 
+import static com.tombatron.jsontools.JsonReader.isDigit;
+import static com.tombatron.jsontools.JsonReader.isHexDigit;
+
 public class Is {
 
     public static boolean json(String text) {
@@ -11,15 +14,15 @@ public class Is {
     }
 
     public static boolean json(JsonReader reader) {
-        char firstChar = reader.next();
+        char firstDelimiter = reader.nextDelimiter();
 
         reader.back();
 
-        if (firstChar == '{') {
+        if (firstDelimiter == '{') {
             return parseObject(reader);
         }
 
-        if (firstChar == '[') {
+        if (firstDelimiter == '[') {
             return parseArray(reader);
         }
 
@@ -27,19 +30,19 @@ public class Is {
     }
 
     private static boolean parseObject(JsonReader reader) {
-        if (reader.getPosition() > 0) {
-            reader.back();
-        }
+        reader.back();
 
-        if (reader.next() == '{') {
+        if (reader.nextDelimiter() == '{') {
             while (reader.hasNext()) {
-                switch (reader.next()) {
+                switch (reader.nextDelimiter()) {
                     case '}':
                         return true;
                     case ',':
-                        if (reader.next() == '}') {
+                        if (!reader.hasValueAhead()) {
                             return false;
                         }
+
+                        reader.next();
 
                         if (!parseString(reader)) {
                             return false;
@@ -52,7 +55,7 @@ public class Is {
                         }
                 }
 
-                if (reader.next() != ':') {
+                if (reader.nextKeyValueDelimiter() != ':') {
                     return false;
                 }
 
@@ -72,7 +75,7 @@ public class Is {
     }
 
     private static boolean parseValue(JsonReader reader) {
-        switch (reader.next()) {
+        switch (reader.nextValueDelimiter()) {
             case '"':
                 return parseString(reader);
             case '0':
@@ -103,7 +106,7 @@ public class Is {
     private static boolean parseString(JsonReader reader) {
         reader.back();
 
-        if (reader.next() == '"') {
+        if (reader.nextStringDelimiter() == '"') {
             while (reader.hasNext()) {
                 switch (reader.next()) {
                     case '"':
@@ -161,6 +164,7 @@ public class Is {
     private static boolean parseNumber(JsonReader reader) {
         char previousChar;
         boolean parsingExponent = false;
+        boolean foundDigit = false;
 
         reader.back();
 
@@ -176,6 +180,8 @@ public class Is {
                 case '7':
                 case '8':
                 case '9':
+                    foundDigit = true;
+
                     break;
                 case 'e':
                 case 'E':
@@ -253,6 +259,15 @@ public class Is {
                 case ']':
                 case ',':
                     return true;
+                case ' ':
+                case '\n':
+                case '\t':
+                case '\r':
+                    if (foundDigit) {
+                        return true;
+                    }
+
+                    break;
                 default:
                     return false;
             }
@@ -273,11 +288,11 @@ public class Is {
                 case ']':
                     return true;
                 case ',':
-                    if (!hasValueBehind(reader)) {
+                    if (!reader.hasValueAhead()) {
                         return false;
                     }
 
-                    if (!hasValueAhead(reader)) {
+                    if (!reader.hasValueBehind()) {
                         return false;
                     }
 
@@ -362,126 +377,4 @@ public class Is {
 
         return false;
     }
-
-    private static boolean isDigit(char c) {
-        switch (c) {
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    private static boolean isHexDigit(char c) {
-        boolean isDecimalDigit = isDigit(c);
-        boolean isUpperHexDigit = false;
-
-        if (!isDecimalDigit) {
-            switch (c) {
-                case 'a':
-                case 'A':
-                case 'b':
-                case 'B':
-                case 'c':
-                case 'C':
-                case 'd':
-                case 'D':
-                case 'e':
-                case 'E':
-                case 'f':
-                case 'F':
-                    isUpperHexDigit = true;
-                    break;
-                default:
-                    isUpperHexDigit = false;
-                    break;
-            }
-        }
-
-        return isDecimalDigit || isUpperHexDigit;
-    }
-
-    private static boolean hasValueBehind(JsonReader reader) {
-        int currentPosition = reader.getPosition();
-        boolean foundValue = false;
-
-        for (; ; ) {
-            char previousChar = reader.back();
-
-            if (isHexDigit(previousChar)) {
-                break;
-            }
-
-            switch (previousChar) {
-                case ' ':
-                    break;
-                case ']':
-                case '}':
-                case '"':
-                case 'e':
-                case 'l':
-                    foundValue = true;
-                    break;
-                case '{':
-                case '[':
-                    return false;
-            }
-
-            if (foundValue) {
-                break;
-            }
-        }
-
-        reader.setPosition(currentPosition);
-
-        return true;
-    }
-
-    private static boolean hasValueAhead(JsonReader reader) {
-        int currentPosition = reader.getPosition();
-        boolean foundValue = false;
-
-        for (; ; ) {
-            char nextChar = reader.next();
-
-            if (isDigit(nextChar)) {
-                break;
-            }
-
-            switch (nextChar) {
-                case ' ':
-                    break;
-                case '"':
-                case '{':
-                case '[':
-                case 't':
-                case 'f':
-                case 'n':
-                case '-':
-                    foundValue = true;
-                    break;
-                case ']':
-                case '}':
-                    return false;
-            }
-
-            if (foundValue) {
-                break;
-            }
-        }
-
-        reader.setPosition(currentPosition);
-
-        return true;
-    }
-
 }

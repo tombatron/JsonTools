@@ -254,4 +254,9 @@ public class IsTests {
     public void arrayWithLeadingValueSeperatorIsInvalid() {
         assertFalse(Is.json("[,1]"));
     }
+
+    @Test
+    public void whitespaceCharactersAreParseable() {
+        assertTrue(Is.json("    \t\n\r{       \r\n\"hello\"      \n: \t3\n\t\r}"));
+    }
 }
