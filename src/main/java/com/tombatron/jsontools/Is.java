@@ -146,7 +146,7 @@ public class Is {
                         }
 
                         break;
-                    case '/':
+
                     case '\b':
                     case '\f':
                     case '\r':
