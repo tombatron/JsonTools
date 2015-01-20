@@ -483,4 +483,280 @@ public class IsTests {
                 "    ]\n" +
                 "}}"));
     }
+
+    @Test
+    public void testCase9IsValid() {
+        assertTrue(Is.json("[\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bd7c3040bb22bb4261\",\n" +
+                "    \"index\": 0,\n" +
+                "    \"guid\": \"b64e47d0-0dea-4493-90e6-ae7bd702bd09\",\n" +
+                "    \"isActive\": true,\n" +
+                "    \"balance\": \"$1,137.13\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 27,\n" +
+                "    \"eyeColor\": \"brown\",\n" +
+                "    \"name\": \"Henson Cantu\",\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"company\": \"NEUROCELL\",\n" +
+                "    \"email\": \"hensoncantu@neurocell.com\",\n" +
+                "    \"phone\": \"+1 (933) 405-3656\",\n" +
+                "    \"address\": \"575 Laurel Avenue, Jackpot, Delaware, 9869\",\n" +
+                "    \"about\": \"Est culpa cillum ea aliqua eiusmod aliquip ut esse cupidatat aliqua in. Commodo ipsum non occaecat eu minim aliquip aliqua. Deserunt excepteur non amet sunt nisi eiusmod ea. Eiusmod esse Lorem nulla labore excepteur quis nisi nulla officia labore nostrud do dolor labore. Lorem ut incididunt elit magna adipisicing. Voluptate veniam enim sit non cupidatat aute laborum velit.\\r\\n\",\n" +
+                "    \"registered\": \"2014-01-10T14:12:25 +05:00\",\n" +
+                "    \"latitude\": 15.291407,\n" +
+                "    \"longitude\": 78.959359,\n" +
+                "    \"tags\": [\n" +
+                "      \"fugiat\",\n" +
+                "      \"adipisicing\",\n" +
+                "      \"ad\",\n" +
+                "      \"ad\",\n" +
+                "      \"et\",\n" +
+                "      \"excepteur\",\n" +
+                "      \"ea\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Mcguire Brooks\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Flores Williamson\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Hurley Travis\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Henson Cantu! You have 1 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"apple\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bd2fe3853a41f3e7bf\",\n" +
+                "    \"index\": 1,\n" +
+                "    \"guid\": \"9c57678e-7fc4-4f09-9abc-0208c7ebbed5\",\n" +
+                "    \"isActive\": false,\n" +
+                "    \"balance\": \"$1,663.72\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 36,\n" +
+                "    \"eyeColor\": \"brown\",\n" +
+                "    \"name\": \"Allison Holcomb\",\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"company\": \"SENMAO\",\n" +
+                "    \"email\": \"allisonholcomb@senmao.com\",\n" +
+                "    \"phone\": \"+1 (978) 504-3518\",\n" +
+                "    \"address\": \"400 Tillary Street, Elwood, American Samoa, 1647\",\n" +
+                "    \"about\": \"Enim do qui exercitation officia ullamco. Aliqua nisi non velit do dolore cupidatat id adipisicing ipsum nisi consequat ex. Adipisicing laborum ipsum labore et aliqua.\\r\\n\",\n" +
+                "    \"registered\": \"2014-10-10T02:33:51 +04:00\",\n" +
+                "    \"latitude\": 7.860403,\n" +
+                "    \"longitude\": -28.998814,\n" +
+                "    \"tags\": [\n" +
+                "      \"exercitation\",\n" +
+                "      \"minim\",\n" +
+                "      \"Lorem\",\n" +
+                "      \"aute\",\n" +
+                "      \"sint\",\n" +
+                "      \"pariatur\",\n" +
+                "      \"nostrud\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Joyce Jackson\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Chandler Mayer\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Noel Lott\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Allison Holcomb! You have 3 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"apple\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bdf11f6c37f30ee709\",\n" +
+                "    \"index\": 2,\n" +
+                "    \"guid\": \"f23d950a-7605-4aa0-82ba-926fb9ef983c\",\n" +
+                "    \"isActive\": true,\n" +
+                "    \"balance\": \"$3,175.09\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 30,\n" +
+                "    \"eyeColor\": \"green\",\n" +
+                "    \"name\": \"Elsie Powers\",\n" +
+                "    \"gender\": \"female\",\n" +
+                "    \"company\": \"AUTOMON\",\n" +
+                "    \"email\": \"elsiepowers@automon.com\",\n" +
+                "    \"phone\": \"+1 (997) 428-2134\",\n" +
+                "    \"address\": \"834 Bartlett Street, Weedville, Kansas, 7224\",\n" +
+                "    \"about\": \"Quis voluptate tempor nulla adipisicing qui enim. Nulla consectetur nisi qui labore minim exercitation eiusmod non. Officia aliqua consequat in culpa cupidatat fugiat amet ipsum. Et elit quis esse labore do anim velit. Deserunt incididunt in adipisicing fugiat ullamco cillum laboris consequat voluptate cupidatat commodo eu minim quis. Commodo nostrud est eu ullamco minim cillum cupidatat aliquip.\\r\\n\",\n" +
+                "    \"registered\": \"2014-03-06T16:10:19 +05:00\",\n" +
+                "    \"latitude\": -42.893993,\n" +
+                "    \"longitude\": 135.33561,\n" +
+                "    \"tags\": [\n" +
+                "      \"velit\",\n" +
+                "      \"adipisicing\",\n" +
+                "      \"enim\",\n" +
+                "      \"sunt\",\n" +
+                "      \"ullamco\",\n" +
+                "      \"nisi\",\n" +
+                "      \"id\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Hatfield Roy\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Ruiz Lane\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Bridget Foster\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Elsie Powers! You have 7 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"strawberry\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bd2d0c8b741bce7e2e\",\n" +
+                "    \"index\": 3,\n" +
+                "    \"guid\": \"6a1587fe-6ad2-4d7f-9472-d51328e47790\",\n" +
+                "    \"isActive\": true,\n" +
+                "    \"balance\": \"$1,597.94\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 22,\n" +
+                "    \"eyeColor\": \"green\",\n" +
+                "    \"name\": \"Vinson Cooke\",\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"company\": \"FUTURITY\",\n" +
+                "    \"email\": \"vinsoncooke@futurity.com\",\n" +
+                "    \"phone\": \"+1 (955) 500-2414\",\n" +
+                "    \"address\": \"550 Vanderbilt Street, Ballico, Marshall Islands, 7427\",\n" +
+                "    \"about\": \"Commodo minim duis Lorem laborum. Nulla sint cupidatat ullamco anim duis adipisicing tempor ad ullamco ea voluptate ut veniam. Cillum aute ad qui pariatur est duis proident in voluptate non. Culpa exercitation irure tempor aliquip. Mollit sunt elit quis consectetur voluptate. Ipsum voluptate nulla magna veniam incididunt pariatur voluptate aliqua consectetur sint dolore.\\r\\n\",\n" +
+                "    \"registered\": \"2014-06-12T03:14:58 +04:00\",\n" +
+                "    \"latitude\": 61.962715,\n" +
+                "    \"longitude\": 37.707542,\n" +
+                "    \"tags\": [\n" +
+                "      \"laboris\",\n" +
+                "      \"magna\",\n" +
+                "      \"labore\",\n" +
+                "      \"exercitation\",\n" +
+                "      \"duis\",\n" +
+                "      \"dolore\",\n" +
+                "      \"anim\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Noelle Vargas\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Eaton Haney\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Beulah Richardson\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Vinson Cooke! You have 8 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"apple\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bdcb9ecd81ea0651b7\",\n" +
+                "    \"index\": 4,\n" +
+                "    \"guid\": \"15290c08-ec74-4297-9e16-185b3eb4e668\",\n" +
+                "    \"isActive\": true,\n" +
+                "    \"balance\": \"$2,576.11\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 22,\n" +
+                "    \"eyeColor\": \"blue\",\n" +
+                "    \"name\": \"Cecelia Glover\",\n" +
+                "    \"gender\": \"female\",\n" +
+                "    \"company\": \"JAMNATION\",\n" +
+                "    \"email\": \"ceceliaglover@jamnation.com\",\n" +
+                "    \"phone\": \"+1 (812) 595-3750\",\n" +
+                "    \"address\": \"482 Dictum Court, Edneyville, Indiana, 1696\",\n" +
+                "    \"about\": \"Sint est incididunt deserunt amet. Sunt culpa aute Lorem ex occaecat amet incididunt deserunt. Fugiat occaecat adipisicing esse consectetur id nostrud mollit. Sit commodo eiusmod elit in incididunt dolor ex. Aliquip tempor officia aute est nulla velit esse consectetur labore exercitation. Tempor est fugiat occaecat sit consequat aliqua cupidatat. Eu nostrud non est velit labore aute eu veniam labore.\\r\\n\",\n" +
+                "    \"registered\": \"2014-12-03T17:45:44 +05:00\",\n" +
+                "    \"latitude\": -71.963632,\n" +
+                "    \"longitude\": -179.483509,\n" +
+                "    \"tags\": [\n" +
+                "      \"do\",\n" +
+                "      \"mollit\",\n" +
+                "      \"esse\",\n" +
+                "      \"veniam\",\n" +
+                "      \"proident\",\n" +
+                "      \"reprehenderit\",\n" +
+                "      \"magna\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Gordon Leon\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Nichole Jenkins\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Powell Hodge\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Cecelia Glover! You have 1 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"banana\"\n" +
+                "  },\n" +
+                "  {\n" +
+                "    \"_id\": \"54bee3bd81ea0244e17faa85\",\n" +
+                "    \"index\": 5,\n" +
+                "    \"guid\": \"5abf665c-4f20-40bf-838f-4756b8f46410\",\n" +
+                "    \"isActive\": false,\n" +
+                "    \"balance\": \"$2,448.89\",\n" +
+                "    \"picture\": \"http://placehold.it/32x32\",\n" +
+                "    \"age\": 23,\n" +
+                "    \"eyeColor\": \"brown\",\n" +
+                "    \"name\": \"Pearson Roberts\",\n" +
+                "    \"gender\": \"male\",\n" +
+                "    \"company\": \"MAGNAFONE\",\n" +
+                "    \"email\": \"pearsonroberts@magnafone.com\",\n" +
+                "    \"phone\": \"+1 (899) 487-3253\",\n" +
+                "    \"address\": \"873 Dekoven Court, Whipholt, Texas, 4910\",\n" +
+                "    \"about\": \"Consectetur aliqua nostrud culpa mollit et anim aute quis eu. Dolor duis ullamco quis nisi excepteur excepteur elit nulla velit. Cillum proident quis id sunt amet nostrud culpa esse. Qui voluptate proident sit deserunt do do dolor elit nisi officia ex fugiat ipsum.\\r\\n\",\n" +
+                "    \"registered\": \"2015-01-03T22:48:18 +05:00\",\n" +
+                "    \"latitude\": -32.339181,\n" +
+                "    \"longitude\": 41.677629,\n" +
+                "    \"tags\": [\n" +
+                "      \"adipisicing\",\n" +
+                "      \"aliquip\",\n" +
+                "      \"labore\",\n" +
+                "      \"proident\",\n" +
+                "      \"non\",\n" +
+                "      \"minim\",\n" +
+                "      \"labore\"\n" +
+                "    ],\n" +
+                "    \"friends\": [\n" +
+                "      {\n" +
+                "        \"id\": 0,\n" +
+                "        \"name\": \"Keller Cross\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 1,\n" +
+                "        \"name\": \"Juliette Baker\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": 2,\n" +
+                "        \"name\": \"Dawson Hansen\"\n" +
+                "      }\n" +
+                "    ],\n" +
+                "    \"greeting\": \"Hello, Pearson Roberts! You have 5 unread messages.\",\n" +
+                "    \"favoriteFruit\": \"strawberry\"\n" +
+                "  }\n" +
+                "]"));
+    }
 }
