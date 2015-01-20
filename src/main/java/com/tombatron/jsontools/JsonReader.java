@@ -24,8 +24,8 @@ public class JsonReader {
     /**
      * Decrement the current position of the reader by one.
      */
-    public void back() {
-        back(1);
+    public char back() {
+        return back(1);
     }
 
     /**
@@ -33,10 +33,12 @@ public class JsonReader {
      *
      * @param decrement Number of positions to decrement.
      */
-    public void back(int decrement) {
+    public char back(int decrement) {
         if (this.position - decrement >= -1) {
             this.position -= decrement;
         }
+
+        return (this.position >= 0) ? this.text[this.position] : '\u0000';
     }
 
     /**
@@ -76,6 +78,13 @@ public class JsonReader {
      */
     public int getPosition() {
         return this.position;
+    }
+
+    /**
+     * Sets the current position of the JsonReader.
+     */
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     /**
