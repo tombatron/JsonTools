@@ -256,7 +256,42 @@ public class IsTests {
     }
 
     @Test
+    public void canHaveArrayOfConstants() {
+        assertTrue(Is.json("[true,false,null]"));
+    }
+
+    @Test
     public void whitespaceCharactersAreParseable() {
         assertTrue(Is.json("    \t\n\r{       \r\n\"hello\"      \n: \t3\n\t\r}"));
+    }
+
+    @Test
+    public void testCase1IsValid() {
+        assertTrue(Is.json("{\n" +
+                                "    \"name\": \"Jack (\\\"Bee\\\") Nimble\", \n" +
+                                "    \"format\": {\n" +
+                                "        \"type\":       \"rect\", \n" +
+                                "        \"width\":      1920, \n" +
+                                "        \"height\":     1080, \n" +
+                                "        \"interlace\":  false, \n" +
+                                "        \"frame rate\": 24\n" +
+                                "    }\n" +
+                                "}"
+                )
+        );
+    }
+
+    @Test
+    public void testCase2IsValid() {
+        assertTrue(Is.json("[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]"));
+    }
+
+    @Test
+    public void testCase3IsValid() {
+        assertTrue(Is.json("[\n" +
+                "    [0, -1, 0],\n" +
+                "    [1, 0, 0],\n" +
+                "    [0, 0, 1]\n" +
+                "]"));
     }
 }
