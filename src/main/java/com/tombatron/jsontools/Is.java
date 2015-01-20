@@ -273,6 +273,14 @@ public class Is {
                 case ']':
                     return true;
                 case ',':
+                    if (!hasValueBehind(reader)) {
+                        return false;
+                    }
+
+                    if (!hasValueAhead(reader)) {
+                        return false;
+                    }
+
                     break;
                 default:
                     reader.back();
@@ -280,6 +288,8 @@ public class Is {
                     if (!parseValue(reader)) {
                         return false;
                     }
+
+                    reader.back();
 
                     break;
             }
@@ -398,6 +408,80 @@ public class Is {
         }
 
         return isDecimalDigit || isUpperHexDigit;
+    }
+
+    private static boolean hasValueBehind(JsonReader reader) {
+        int currentPosition = reader.getPosition();
+        boolean foundValue = false;
+
+        for (; ; ) {
+            char previousChar = reader.back();
+
+            if (isHexDigit(previousChar)) {
+                break;
+            }
+
+            switch (previousChar) {
+                case ' ':
+                    break;
+                case ']':
+                case '}':
+                case '"':
+                case 'e':
+                case 'l':
+                    foundValue = true;
+                    break;
+                case '{':
+                case '[':
+                    return false;
+            }
+
+            if (foundValue) {
+                break;
+            }
+        }
+
+        reader.setPosition(currentPosition);
+
+        return true;
+    }
+
+    private static boolean hasValueAhead(JsonReader reader) {
+        int currentPosition = reader.getPosition();
+        boolean foundValue = false;
+
+        for (; ; ) {
+            char nextChar = reader.next();
+
+            if (isDigit(nextChar)) {
+                break;
+            }
+
+            switch (nextChar) {
+                case ' ':
+                    break;
+                case '"':
+                case '{':
+                case '[':
+                case 't':
+                case 'f':
+                case 'n':
+                case '-':
+                    foundValue = true;
+                    break;
+                case ']':
+                case '}':
+                    return false;
+            }
+
+            if (foundValue) {
+                break;
+            }
+        }
+
+        reader.setPosition(currentPosition);
+
+        return true;
     }
 
 }

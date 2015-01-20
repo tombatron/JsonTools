@@ -239,4 +239,19 @@ public class IsTests {
     public void emptyArrayIsValid() {
         assertTrue(Is.json("[]"));
     }
+
+    @Test
+    public void emptyArrayWithValueSeparatorIsInvalid() {
+        assertFalse(Is.json("[,]"));
+    }
+
+    @Test
+    public void arrayWithTrailingValueSeparatorIsInvalid() {
+        assertFalse(Is.json("[1,]"));
+    }
+
+    @Test
+    public void arrayWithLeadingValueSeperatorIsInvalid() {
+        assertFalse(Is.json("[,1]"));
+    }
 }
