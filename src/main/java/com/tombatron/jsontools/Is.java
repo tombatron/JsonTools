@@ -15,18 +15,19 @@ public class Is {
 
     public static boolean json(JsonReader reader) {
         char firstDelimiter = reader.nextDelimiter();
+        boolean result = false;
 
         reader.back();
 
         if (firstDelimiter == '{') {
-            return parseObject(reader);
+            result = parseObject(reader);
         }
 
         if (firstDelimiter == '[') {
-            return parseArray(reader);
+            result = parseArray(reader);
         }
 
-        return false;
+        return result;
     }
 
     private static boolean parseObject(JsonReader reader) {
@@ -215,12 +216,25 @@ public class Is {
 
                     break;
                 case '-':
-                    reader.back(2);
-
-                    previousChar = reader.next();
+                    previousChar = reader.back();
 
                     boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
-                    boolean isPreviousDelimiter = previousChar == ':';
+                    boolean isPreviousDelimiter;
+
+                    switch(previousChar) {
+                        case ':':
+                        case ' ':
+                        case '[':
+                        case ',':
+                        case '\n':
+                        case '\t':
+                        case '\r':
+                            isPreviousDelimiter = true;
+                            break;
+                        default:
+                            isPreviousDelimiter = false;
+                            break;
+                    }
 
                     if (!(isPreviousExponent || isPreviousDelimiter)) {
                         return false;
@@ -258,12 +272,16 @@ public class Is {
                 case '}':
                 case ']':
                 case ',':
+                    reader.back();
+
                     return true;
                 case ' ':
                 case '\n':
                 case '\t':
                 case '\r':
                     if (foundDigit) {
+                        reader.back();
+
                         return true;
                     }
 
@@ -284,7 +302,14 @@ public class Is {
         }
 
         while (reader.hasNext()) {
-            switch (reader.next()) {
+            char nextChar = reader.next();
+
+            switch (nextChar) {
+                case '\t':
+                case '\n':
+                case '\r':
+                case ' ':
+                    break;
                 case ']':
                     return true;
                 case ',':
@@ -304,13 +329,7 @@ public class Is {
                         return false;
                     }
 
-                    reader.back();
-
                     break;
-            }
-
-            if (reader.current() == ']') {
-                reader.back();
             }
         }
 
@@ -369,6 +388,10 @@ public class Is {
 
                     break;
                 case '}':
+                case ']':
+                case ',':
+                    reader.back();
+
                     return true;
                 default:
                     return false;
