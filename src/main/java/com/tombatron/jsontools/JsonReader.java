@@ -321,8 +321,9 @@ public class JsonReader {
     public String toString() {
         String nextCharacter = position + 1 < this.length ? String.valueOf(this.text[position + 1]) : "EOF";
         String currentCharacter = position < 0 ? "BOF" : String.valueOf(this.text[position]);
+        String currentPosition = String.valueOf(position);
 
-        return "Current Character='" + currentCharacter + "'; Next Character='" + nextCharacter + "'";
+        return "Current Position=" + currentPosition + "; Current Character='" + currentCharacter + "'; Next Character='" + nextCharacter + "'";
     }
 
     /**
