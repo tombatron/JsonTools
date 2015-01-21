@@ -42,6 +42,41 @@ public class PerformanceTests {
         printResults("Valid JSON Parsing (Reference)", referenceTimings);
     }
 
+    @Test
+    public void validJsonArrayParsePerformanceTest() {
+        long start, end, duration;
+
+        long[] timings = new long[10000];
+        long[] referenceTimings = new long[10000];
+
+        for (int i = 0; i < 10000; i++) {
+            // Test the library code.
+            start = System.nanoTime();
+
+            Is.json(JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            timings[i] = duration;
+
+            // Test the reference code.
+            start = System.nanoTime();
+
+            referenceCode(JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            referenceTimings[i] = duration;
+        }
+
+        printResults("Valid JSON Array Parsing", timings);
+        printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
+    }
+
     /**
      * This is reference code used to test the performance of the `Is` class.
      *
