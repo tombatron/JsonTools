@@ -178,7 +178,7 @@ public class JsonReader {
     /**
      * Go to the next key/value delimiter (:) in the reader. If no key/value delimiters can be found
      * a null character will be returned.
-     * <p/>
+     *
      * If a character other than a "whitespace" character or key/value delimiter is encountered a null
      * character will be returned.
      *
