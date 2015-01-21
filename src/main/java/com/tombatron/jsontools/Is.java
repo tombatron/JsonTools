@@ -46,17 +46,22 @@ public class Is {
                             return false;
                         }
 
-                        reader.next();
-
-                        if (!parseString(reader)) {
+                        if (reader.nextString() == null) {
                             return false;
                         }
 
                         break;
-                    default:
-                        if (!parseString(reader)) {
+                    case '"':
+                        reader.back();
+
+                        if (reader.nextString() == null) {
                             return false;
                         }
+
+                        break;
+
+                    default:
+                        return false;
                 }
 
                 if (reader.nextKeyValueDelimiter() != ':') {
@@ -81,7 +86,9 @@ public class Is {
     private static boolean parseValue(JsonReader reader) {
         switch (reader.nextValueDelimiter()) {
             case '"':
-                return parseString(reader);
+                reader.back();
+
+                return reader.nextString() != null;
             case '0':
             case '1':
             case '2':
@@ -105,64 +112,6 @@ public class Is {
             default:
                 return false;
         }
-    }
-
-    private static boolean parseString(JsonReader reader) {
-        reader.back();
-
-        if (reader.nextStringDelimiter() == '"') {
-            while (reader.hasNext()) {
-                switch (reader.next()) {
-                    case '"':
-                        return true;
-                    case '\\':
-                        switch (reader.next()) {
-                            case 'b':
-                            case 'f':
-                            case 'n':
-                            case 'r':
-                            case 't':
-                            case '\\':
-                            case '/':
-                            case '"':
-                                break;
-                            case 'u':
-                                if (!isHexDigit(reader.next())) {
-                                    return false;
-                                }
-
-                                if (!isHexDigit(reader.next())) {
-                                    return false;
-                                }
-
-                                if (!isHexDigit(reader.next())) {
-                                    return false;
-                                }
-
-                                if (!isHexDigit(reader.next())) {
-                                    return false;
-                                }
-
-                                break;
-                            default:
-                                return false;
-                        }
-
-                        break;
-
-                    case '\b':
-                    case '\f':
-                    case '\r':
-                    case '\t':
-                    case '\n':
-                        return false;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        return false;
     }
 
     private static boolean parseNumber(JsonReader reader) {
