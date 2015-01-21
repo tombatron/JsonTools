@@ -1,6 +1,8 @@
 package com.tombatron.jsontools;
 
-import static com.tombatron.jsontools.Constants.NULL;
+import java.nio.CharBuffer;
+
+import static com.tombatron.jsontools.Constants.*;
 
 /**
  * JsonReader is used by the `json` method of the `Is` class to parse a potential
@@ -66,7 +68,6 @@ public class JsonReader {
      * Get the next `n` number of characters and return them as a char[].
      *
      * @param n Number of characters to advance.
-     *
      * @return A char[] containing the next `n` characters.
      */
     public char[] next(int n) {
@@ -83,6 +84,79 @@ public class JsonReader {
         }
 
         return result;
+    }
+
+    /**
+     * A method that parses out the next string in the reader.
+     *
+     * @return A String representing the next string in the reader.
+     */
+    public String nextString() {
+        StringBuilder buffer = new StringBuilder();
+        char currentChar;
+
+        if (nextStringDelimiter() == STRING_DELIMITER) {
+
+            while (hasNext()) {
+                currentChar = next();
+
+                switch (currentChar) {
+                    case STRING_DELIMITER:
+                        return buffer.toString();
+
+                    case '\\':
+                        buffer.append(currentChar);
+
+                        currentChar = next();
+
+                        switch (currentChar) {
+                            case 'b':
+                            case 'f':
+                            case 'n':
+                            case 'r':
+                            case 't':
+                            case '\\':
+                            case '/':
+                            case '"':
+                                buffer.append(currentChar);
+
+                                break;
+                            case 'u':
+                                buffer.append(currentChar);
+
+                                for (int i = 0; i < 4; i++) {
+                                    currentChar = next();
+
+                                    if (!isHexDigit(currentChar)) {
+                                        return null;
+                                    }
+
+                                    buffer.append(currentChar);
+                                }
+
+                                break;
+                            default:
+                                return null;
+                        }
+
+                        break;
+
+                    case '\b':
+                    case '\f':
+                    case '\r':
+                    case '\t':
+                    case '\n':
+                        return null;
+                    default:
+                        buffer.append(currentChar);
+
+                        break;
+                }
+            }
+
+        }
+
+        return null;
     }
 
     /**
@@ -178,7 +252,7 @@ public class JsonReader {
     /**
      * Go to the next key/value delimiter (:) in the reader. If no key/value delimiters can be found
      * a null character will be returned.
-     *
+     * <p/>
      * If a character other than a "whitespace" character or key/value delimiter is encountered a null
      * character will be returned.
      *
@@ -356,7 +430,7 @@ public class JsonReader {
      * @return `true` if the current character is whitespace, else `false`.
      */
     public boolean isCurrentWhitespace() {
-        switch(current()) {
+        switch (current()) {
             case ' ':
             case '\n':
             case '\r':
