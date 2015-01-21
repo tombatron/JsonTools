@@ -305,31 +305,22 @@ public class Is {
         }
 
         while (reader.hasNext()) {
-            char nextChar = reader.next();
-
-            switch (nextChar) {
-                case '\t':
-                case '\n':
-                case '\r':
-                case ' ':
-                    break;
+            switch (reader.next()) {
                 case ']':
                     return true;
                 case ',':
-                    if (!reader.hasValueAhead()) {
-                        return false;
-                    }
-
-                    if (!reader.hasValueBehind()) {
+                    if (reader.hasNoValueAhead() || reader.hasNoValueBehind()) {
                         return false;
                     }
 
                     break;
                 default:
-                    reader.back();
+                    if (!reader.isCurrentWhitespace()) {
+                        reader.back();
 
-                    if (!parseValue(reader)) {
-                        return false;
+                        if (!parseValue(reader)) {
+                            return false;
+                        }
                     }
 
                     break;
@@ -369,6 +360,10 @@ public class Is {
 
                     return true;
                 default:
+                    if (reader.isCurrentWhitespace()) {
+                        break;
+                    }
+
                     return false;
             }
         }

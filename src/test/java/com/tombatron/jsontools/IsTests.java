@@ -304,4 +304,9 @@ public class IsTests {
     public void testCase9IsValid() {
         assertTrue(Is.json(JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE));
     }
+
+    @Test
+    public void testWhiteSpaceAfterConstantValueIsValid() {
+        assertTrue(Is.json("{\"constant\":true \n\t\r}"));
+    }
 }

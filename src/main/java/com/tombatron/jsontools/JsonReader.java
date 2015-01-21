@@ -290,6 +290,15 @@ public class JsonReader {
     }
 
     /**
+     * A negation of the `hasValueBehind` method put here to increase readability.
+     *
+     * @return `false` if a value delimiter has been found, else `true`.
+     */
+    public boolean hasNoValueBehind() {
+        return !hasValueBehind();
+    }
+
+    /**
      * Looks ahead to see if there are any value delimiters.
      *
      * @return `true` if a value delimiter has been found, else `false`.
@@ -330,6 +339,32 @@ public class JsonReader {
         this.position = currentPosition;
 
         return true;
+    }
+
+    /**
+     * A negation of the `hasValueAhead` method put here to increase readability.
+     *
+     * @return `false` if a value delimiter has been found, else `true`.
+     */
+    public boolean hasNoValueAhead() {
+        return !hasValueAhead();
+    }
+
+    /**
+     * This method is used to determine if the character in the current position is whitespace.
+     *
+     * @return `true` if the current character is whitespace, else `false`.
+     */
+    public boolean isCurrentWhitespace() {
+        switch(current()) {
+            case ' ':
+            case '\n':
+            case '\r':
+            case '\t':
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
