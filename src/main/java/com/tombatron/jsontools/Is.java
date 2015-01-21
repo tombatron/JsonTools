@@ -1,7 +1,10 @@
 package com.tombatron.jsontools;
 
+import java.util.Arrays;
+
 import static com.tombatron.jsontools.JsonReader.isDigit;
 import static com.tombatron.jsontools.JsonReader.isHexDigit;
+import static com.tombatron.jsontools.Constants.*;
 
 public class Is {
 
@@ -342,47 +345,19 @@ public class Is {
         while (reader.hasNext()) {
             switch (reader.next()) {
                 case 't':
-                    if (reader.next() != 'r') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'u') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'e') {
+                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_TRUE_CHARACTERS)) {
                         return false;
                     }
 
                     break;
                 case 'f':
-                    if (reader.next() != 'a') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'l') {
-                        return false;
-                    }
-
-                    if (reader.next() != 's') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'e') {
+                    if(!Arrays.equals(reader.next(4), EXPECTED_NEXT_FALSE_CHARACTERS)) {
                         return false;
                     }
 
                     break;
                 case 'n':
-                    if (reader.next() != 'u') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'l') {
-                        return false;
-                    }
-
-                    if (reader.next() != 'l') {
+                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
                         return false;
                     }
 

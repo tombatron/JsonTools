@@ -1,12 +1,12 @@
 package com.tombatron.jsontools;
 
+import static com.tombatron.jsontools.Constants.NULL;
+
 /**
  * JsonReader is used by the `json` method of the `Is` class to parse a potential
  * JSON string.
  */
 public class JsonReader {
-
-    private static final char NULL = '\u0000';
 
     private int length;
     private int position;
@@ -59,9 +59,30 @@ public class JsonReader {
      * @return The next character from the reader.
      */
     public char next() {
-        this.position++;
+        return next(1)[0];
+    }
 
-        return this.text[position];
+    /**
+     * Get the next `n` number of characters and return them as a char[].
+     *
+     * @param n Number of characters to advance.
+     *
+     * @return A char[] containing the next `n` characters.
+     */
+    public char[] next(int n) {
+        char[] result = new char[n];
+
+        for (int i = 0; i < n; i++) {
+            this.position++;
+
+            if (this.position > this.length) {
+                result[i] = NULL;
+            } else {
+                result[i] = this.text[position];
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -86,7 +107,6 @@ public class JsonReader {
      * The static factory method used to create an instance of the JsonReader.
      *
      * @param text char[] that is reader by the JsonReader class.
-     *
      * @return Instance of the JsonReader class.
      */
     public static JsonReader create(char[] text) {
@@ -96,15 +116,15 @@ public class JsonReader {
     /**
      * Go to the next delimiter in the reader. If no more delimiters can be found a null
      * character will be returned.
-     *
+     * <p/>
      * If a character other than a "whitespace" character or object/array delimiter is encountered a null
      * character will be returned.
      *
      * @return The next delimiter character.
      */
     public char nextDelimiter() {
-        while(hasNext()) {
-            switch(next()) {
+        while (hasNext()) {
+            switch (next()) {
                 case ' ':
                 case '\t':
                 case '\n':
@@ -129,15 +149,15 @@ public class JsonReader {
     /**
      * Go to the next string delimiter in the reader. If no more string delimiters can be found
      * a null character will be returned.
-     *
+     * <p/>
      * If a character other than a "whitespace" character or string delimiter is encountered a null
      * character will be returned.
      *
      * @return The next string delimiter.
      */
     public char nextStringDelimiter() {
-        while(hasNext()) {
-            switch(next()) {
+        while (hasNext()) {
+            switch (next()) {
                 case '"':
                     back();
 
@@ -158,15 +178,15 @@ public class JsonReader {
     /**
      * Go to the next key/value delimiter (:) in the reader. If no key/value delimiters can be found
      * a null character will be returned.
-     *
+     * <p/>
      * If a character other than a "whitespace" character or key/value delimiter is encountered a null
      * character will be returned.
      *
      * @return The next key/value delimiter.
      */
     public char nextKeyValueDelimiter() {
-        while(hasNext()) {
-            switch(next()) {
+        while (hasNext()) {
+            switch (next()) {
                 case ':':
                     back();
 
@@ -186,14 +206,14 @@ public class JsonReader {
 
     /**
      * Go to the next value delimiter in the reader.
-     *
+     * <p/>
      * If a character other than a "whitespace" character or value delimiter is encountered a null character
      * will be returned.
      *
      * @return The next start to a value.
      */
     public char nextValueDelimiter() {
-        while(hasNext()) {
+        while (hasNext()) {
             char nextChar = next();
 
             if (isDigit(nextChar)) {
@@ -202,7 +222,7 @@ public class JsonReader {
                 return next();
             }
 
-            switch(nextChar) {
+            switch (nextChar) {
                 case ' ':
                 case '\r':
                 case '\n':
@@ -330,7 +350,6 @@ public class JsonReader {
      * Test whether or not a given char represents a base 10 numeral.
      *
      * @param c char to test.
-     *
      * @return `true` if the given char represents a numeral, else `false`.
      */
     public static boolean isDigit(char c) {
@@ -355,7 +374,6 @@ public class JsonReader {
      * Test whether or not a given char represents a base 16 numeral.
      *
      * @param c char to test.
-     *
      * @return `true` if the given char represents a base 16 numeral, else `false`.
      */
     public static boolean isHexDigit(char c) {
