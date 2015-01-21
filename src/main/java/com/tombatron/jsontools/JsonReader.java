@@ -1,8 +1,7 @@
 package com.tombatron.jsontools;
 
-import java.nio.CharBuffer;
-
-import static com.tombatron.jsontools.Constants.*;
+import static com.tombatron.jsontools.Constants.NULL;
+import static com.tombatron.jsontools.Constants.STRING_DELIMITER;
 
 /**
  * JsonReader is used by the `json` method of the `Is` class to parse a potential
@@ -209,6 +208,7 @@ public class JsonReader {
                 case '[':
                 case ']':
                 case ',':
+                case '"':
                     back();
 
                     return next();
