@@ -1,5 +1,10 @@
 package com.tombatron.jsontools;
 
+/**
+ * This class contains many samples of JSON objects used for testing.
+ *
+ * Many of these examples were taken from www.json.org. Their rights reserved and what not.
+ */
 public class JsonSamples {
 
     private JsonSamples() {
@@ -52,6 +57,7 @@ public class JsonSamples {
             "}}";
 
     public static final String KNOWN_GOOD_STRING_ARRAY = "[\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"]";
+
 
     public static final String KNOWN_GOOD_ARRAY_OF_ARRAYS = "[\n" +
             "    [0, -1, 0],\n" +
