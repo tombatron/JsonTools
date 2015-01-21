@@ -42,7 +42,7 @@ public class Is {
                     case '}':
                         return true;
                     case ',':
-                        if (!reader.hasValueAhead()) {
+                        if (reader.hasNoValueAhead()) {
                             return false;
                         }
 
