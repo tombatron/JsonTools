@@ -2,9 +2,8 @@ package com.tombatron.jsontools;
 
 import java.util.Arrays;
 
-import static com.tombatron.jsontools.JsonReader.isDigit;
-import static com.tombatron.jsontools.JsonReader.isHexDigit;
 import static com.tombatron.jsontools.Constants.*;
+import static com.tombatron.jsontools.JsonReader.isDigit;
 
 public class Is {
 
@@ -173,7 +172,7 @@ public class Is {
                     boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
                     boolean isPreviousDelimiter;
 
-                    switch(previousChar) {
+                    switch (previousChar) {
                         case ':':
                         case ' ':
                         case '[':
@@ -285,19 +284,19 @@ public class Is {
         while (reader.hasNext()) {
             switch (reader.next()) {
                 case 't':
-                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_TRUE_CHARACTERS)) {
+                    if (!Arrays.equals(reader.next(3), EXPECTED_NEXT_TRUE_CHARACTERS)) {
                         return false;
                     }
 
                     break;
                 case 'f':
-                    if(!Arrays.equals(reader.next(4), EXPECTED_NEXT_FALSE_CHARACTERS)) {
+                    if (!Arrays.equals(reader.next(4), EXPECTED_NEXT_FALSE_CHARACTERS)) {
                         return false;
                     }
 
                     break;
                 case 'n':
-                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
+                    if (!Arrays.equals(reader.next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
                         return false;
                     }
 
