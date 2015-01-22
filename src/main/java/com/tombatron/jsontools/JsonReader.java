@@ -186,10 +186,15 @@ public class JsonReader {
 
                     break;
 
+                case '}':
+                case ']':
+                case ',':
                 default:
                     if (isCurrentWhitespace()) {
                         break;
                     }
+
+                    return null;
             }
 
             if (valueFound) {
