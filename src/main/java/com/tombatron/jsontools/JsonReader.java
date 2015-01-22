@@ -1,7 +1,8 @@
 package com.tombatron.jsontools;
 
-import static com.tombatron.jsontools.Constants.NULL;
-import static com.tombatron.jsontools.Constants.STRING_DELIMITER;
+import java.util.Arrays;
+
+import static com.tombatron.jsontools.Constants.*;
 
 /**
  * JsonReader is used by the `json` method of the `Is` class to parse a potential
@@ -156,6 +157,46 @@ public class JsonReader {
         }
 
         return null;
+    }
+
+    public Boolean nextBoolean() {
+        Boolean booleanValue = null;
+        Boolean valueFound = false;
+
+        while (hasNext()) {
+            switch (next()) {
+                case 't':
+                    if (Arrays.equals(next(3), EXPECTED_NEXT_TRUE_CHARACTERS)) {
+                        booleanValue = true;
+                        valueFound = true;
+                    }
+
+                    break;
+
+                case 'f':
+                    if (Arrays.equals(next(4), EXPECTED_NEXT_FALSE_CHARACTERS)) {
+                        booleanValue = false;
+                        valueFound = true;
+                    }
+
+                    break;
+
+                default:
+                    if (isCurrentWhitespace()) {
+                        break;
+                    }
+            }
+
+            if (valueFound) {
+                break;
+            }
+        }
+
+        return booleanValue;
+    }
+
+    public char nextNull() {
+        return ' ';
     }
 
     /**
