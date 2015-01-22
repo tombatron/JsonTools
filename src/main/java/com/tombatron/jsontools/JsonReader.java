@@ -159,6 +159,11 @@ public class JsonReader {
         return null;
     }
 
+    /**
+     * A method that attempts to parse the next boolean value from a JSON string.
+     *
+     * @return `true` if the parsed value is "true", `false` if it's "false" and null if it's invalid.
+     */
     public Boolean nextBoolean() {
         Boolean booleanValue = null;
         Boolean valueFound = false;
@@ -195,7 +200,32 @@ public class JsonReader {
         return booleanValue;
     }
 
+    /**
+     * A method that attempts to parse the next JavaScript null value from a JSON string.
+     *
+     * @return Returns the char code for `null` if successful.
+     */
     public char nextNull() {
+        while(hasNext()) {
+            switch(next()) {
+                case 'n':
+                    if(Arrays.equals(next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
+                        return NULL;
+                    }
+
+                    return ' ';
+                case '}':
+                case ']':
+                case ',':
+                default:
+                    if (isCurrentWhitespace()) {
+                        break;
+                    }
+
+                    return ' ';
+            }
+        }
+
         return ' ';
     }
 
