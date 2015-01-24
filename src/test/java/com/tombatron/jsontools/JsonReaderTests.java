@@ -78,4 +78,48 @@ public class JsonReaderTests {
 
         assertNotEquals(NULL, reader.nextNull());
     }
+
+    @Test
+    public void canParseNextNumber() {
+        JsonReader reader;
+
+        char[] number_ex_1 = "-100}".toCharArray();
+
+        reader = JsonReader.create(number_ex_1);
+
+        assertEquals("-100", reader.nextNumber());
+
+        char[] number_ex_2 = "100}".toCharArray();
+
+        reader = JsonReader.create(number_ex_2);
+
+        assertEquals("100", reader.nextNumber());
+
+        char[] number_ex_3 = "0.10}".toCharArray();
+
+        reader = JsonReader.create(number_ex_3);
+
+        assertEquals("0.10", reader.nextNumber());
+
+        char[] number_ex_4 = "10e-100}".toCharArray();
+
+        reader = JsonReader.create(number_ex_4);
+
+        assertEquals("10e-100", reader.nextNumber());
+
+        char[] number_ex_5 = "100e+100}".toCharArray();
+
+        reader = JsonReader.create(number_ex_5);
+
+        assertEquals("100e+100", reader.nextNumber());
+    }
+
+    @Test
+    public void willReturnNullIfCantParseNextNumber() {
+        char[] bad_number_ex = ".10".toCharArray();
+
+        JsonReader reader = JsonReader.create(bad_number_ex);
+
+        assertNull(reader.nextNumber());
+    }
 }

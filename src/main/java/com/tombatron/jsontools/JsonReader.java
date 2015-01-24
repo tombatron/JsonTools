@@ -235,6 +235,154 @@ public class JsonReader {
     }
 
     /**
+     * A method that attempts to parse the next valid number value from a JSON string.
+     *
+     * @return Returns a string containing the number if successful, else `null`.
+     */
+    public String nextNumber() {
+        StringBuilder buffer = new StringBuilder();
+
+        char previousChar;
+        boolean parsingExponent = false;
+        boolean foundDigit = false;
+
+        while (hasNext()) {
+            char nextCharacter = next();
+
+            switch (nextCharacter) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    foundDigit = true;
+
+                    buffer.append(nextCharacter);
+
+                    break;
+                case 'e':
+                case 'E':
+                    back(2);
+
+                    if (!isDigit(next())) {
+                        return null;
+                    }
+
+                    next();
+
+                    parsingExponent = true;
+
+                    buffer.append(nextCharacter);
+
+                    break;
+                case '+':
+                    back(2);
+
+                    previousChar = next();
+
+                    if (!(previousChar == 'e' || previousChar == 'E')) {
+                        return null;
+                    }
+
+                    buffer.append(next()); // Add in the +...
+
+                    if (!isDigit(next())) {
+                        return null;
+                    }
+
+                    back();
+
+                    break;
+                case '-':
+                    previousChar = back();
+
+                    boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
+                    boolean isPreviousDelimiter;
+
+                    switch (previousChar) {
+                        case ':':
+                        case ' ':
+                        case '[':
+                        case ',':
+                        case '\n':
+                        case '\t':
+                        case '\r':
+                        case NULL:
+                            isPreviousDelimiter = true;
+                            break;
+                        default:
+                            isPreviousDelimiter = false;
+                            break;
+                    }
+
+                    if (!(isPreviousExponent || isPreviousDelimiter)) {
+                        return null;
+                    }
+
+                    next();
+
+                    if (!isDigit(next())) {
+                        return null;
+                    }
+
+                    back();
+
+                    buffer.append(nextCharacter);
+
+                    break;
+                case '.':
+                    if (parsingExponent) {
+                        return null;
+                    }
+
+                    back(2);
+
+                    if (!isDigit(next())) {
+                        return null;
+                    }
+
+                    next();
+
+                    if (!isDigit(next())) {
+                        return null;
+                    }
+
+                    back();
+
+                    buffer.append(nextCharacter);
+
+                    break;
+                case '}':
+                case ']':
+                case ',':
+                    back();
+
+                    return buffer.toString();
+                case ' ':
+                case '\n':
+                case '\t':
+                case '\r':
+                    if (foundDigit) {
+                        back();
+
+                        return buffer.toString();
+                    }
+
+                    break;
+                default:
+                    return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Return whether or not there is more data in the reader.
      *
      * @return True or false, does the reader have more to give?
