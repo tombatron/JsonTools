@@ -1,9 +1,6 @@
 package com.tombatron.jsontools;
 
-import java.util.Arrays;
-
-import static com.tombatron.jsontools.Constants.*;
-import static com.tombatron.jsontools.JsonReader.isDigit;
+import static com.tombatron.jsontools.Constants.NULL;
 
 public class Is {
 
@@ -99,7 +96,9 @@ public class Is {
             case '8':
             case '9':
             case '-':
-                return parseNumber(reader);
+                reader.back();
+
+                return reader.nextNumber() != null;
             case '[':
                 return parseArray(reader);
             case '{':
@@ -116,138 +115,6 @@ public class Is {
             default:
                 return false;
         }
-    }
-
-    private static boolean parseNumber(JsonReader reader) {
-        char previousChar;
-        boolean parsingExponent = false;
-        boolean foundDigit = false;
-
-        reader.back();
-
-        while (reader.hasNext()) {
-            switch (reader.next()) {
-                case '0':
-                case '1':
-                case '2':
-                case '3':
-                case '4':
-                case '5':
-                case '6':
-                case '7':
-                case '8':
-                case '9':
-                    foundDigit = true;
-
-                    break;
-                case 'e':
-                case 'E':
-                    reader.back(2);
-
-                    if (!isDigit(reader.next())) {
-                        return false;
-                    }
-
-                    reader.next();
-
-                    parsingExponent = true;
-
-                    break;
-                case '+':
-                    reader.back(2);
-
-                    previousChar = reader.next();
-
-                    if (!(previousChar == 'e' || previousChar == 'E')) {
-                        return false;
-                    }
-
-                    reader.next();
-
-                    if (!isDigit(reader.next())) {
-                        return false;
-                    }
-
-                    reader.back();
-
-                    break;
-                case '-':
-                    previousChar = reader.back();
-
-                    boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
-                    boolean isPreviousDelimiter;
-
-                    switch (previousChar) {
-                        case ':':
-                        case ' ':
-                        case '[':
-                        case ',':
-                        case '\n':
-                        case '\t':
-                        case '\r':
-                            isPreviousDelimiter = true;
-                            break;
-                        default:
-                            isPreviousDelimiter = false;
-                            break;
-                    }
-
-                    if (!(isPreviousExponent || isPreviousDelimiter)) {
-                        return false;
-                    }
-
-                    reader.next();
-
-                    if (!isDigit(reader.next())) {
-                        return false;
-                    }
-
-                    reader.back();
-
-                    break;
-                case '.':
-                    if (parsingExponent) {
-                        return false;
-                    }
-
-                    reader.back(2);
-
-                    if (!isDigit(reader.next())) {
-                        return false;
-                    }
-
-                    reader.next();
-
-                    if (!isDigit(reader.next())) {
-                        return false;
-                    }
-
-                    reader.back();
-
-                    break;
-                case '}':
-                case ']':
-                case ',':
-                    reader.back();
-
-                    return true;
-                case ' ':
-                case '\n':
-                case '\t':
-                case '\r':
-                    if (foundDigit) {
-                        reader.back();
-
-                        return true;
-                    }
-
-                    break;
-                default:
-                    return false;
-            }
-        }
-
-        return false;
     }
 
     private static boolean parseArray(JsonReader reader) {
