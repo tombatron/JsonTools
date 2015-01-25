@@ -11,150 +11,38 @@ public class PerformanceTests {
 
     @Test
     public void validJsonParsePerformanceTest() {
-        long start, end, duration;
-
-        long[] timings = new long[10000];
-        long[] referenceTimings = new long[10000];
-
-        for (int i = 0; i < 10000; i++) {
-            // Test the library code.
-            start = System.nanoTime();
-
-            Is.json(JsonSamples.KNOWN_GOOD_LARGE_OBJECT_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            timings[i] = duration;
-
-            // Test the reference code.
-            start = System.nanoTime();
-
-            referenceCode(JsonSamples.KNOWN_GOOD_LARGE_OBJECT_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            referenceTimings[i] = duration;
-        }
-
-        long result = printResults("Valid JSON Parsing", timings);
-        long referenceResult = printResults("Valid JSON Parsing (Reference)", referenceTimings);
-
-        assertTrue("JsonTools library is not faster at parsing a valid JSON object than the reference code.", referenceResult > result);
+        executeIsJsonPerformanceTest(
+                JsonSamples.KNOWN_GOOD_LARGE_OBJECT_SAMPLE,
+                "Valid JSON Parsing",
+                "JsonTools library is not faster at parsing a valid JSON object than the reference code."
+        );
     }
 
     @Test
     public void validJsonArrayParsePerformanceTest() {
-        long start, end, duration;
-
-        long[] timings = new long[10000];
-        long[] referenceTimings = new long[10000];
-
-        for (int i = 0; i < 10000; i++) {
-            // Test the library code.
-            start = System.nanoTime();
-
-            Is.json(JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            timings[i] = duration;
-
-            // Test the reference code.
-            start = System.nanoTime();
-
-            referenceCode(JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            referenceTimings[i] = duration;
-        }
-
-        long result = printResults("Valid JSON Array Parsing", timings);
-        long referenceResult = printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
-
-        assertTrue("JsonTools library is not faster at parsing a valid JSON array than the reference code.", referenceResult > result);
+        executeIsJsonPerformanceTest(
+                JsonSamples.KNOWN_GOOD_LARGE_ARRAY_SAMPLE,
+                "Valid JSON Array Parsing",
+                "JsonTools library is not faster at parsing a valid JSON array than the reference code."
+        );
     }
 
     @Test
     public void invalidJsonParsePerformanceTest() {
-        long start, end, duration;
-
-        long[] timings = new long[10000];
-        long[] referenceTimings = new long[10000];
-
-        for (int i = 0; i < 10000; i++) {
-            // Test the library code.
-            start = System.nanoTime();
-
-            Is.json(JsonSamples.KNOWN_BAD_LARGE_OBJECT_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            timings[i] = duration;
-
-            // Test the reference code.
-            start = System.nanoTime();
-
-            referenceCode(JsonSamples.KNOWN_BAD_LARGE_OBJECT_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            referenceTimings[i] = duration;
-        }
-
-        long result = printResults("Invalid JSON Parsing", timings);
-        long referenceResult = printResults("Invalid JSON Parsing (Reference)", referenceTimings);
-
-        assertTrue("JsonTools library is not faster at parsing an invalid JSON object than the reference code.", referenceResult > result);
+        executeIsJsonPerformanceTest(
+                JsonSamples.KNOWN_BAD_LARGE_OBJECT_SAMPLE,
+                "Invalid JSON Parsing",
+                "JsonTools library is not faster at parsing an invalid JSON object than the reference code."
+        );
     }
 
     @Test
     public void invalidJsonArrayParsePerformanceTest() {
-        long start, end, duration;
-
-        long[] timings = new long[10000];
-        long[] referenceTimings = new long[10000];
-
-        for (int i = 0; i < 10000; i++) {
-            // Test the library code.
-            start = System.nanoTime();
-
-            Is.json(JsonSamples.KNOWN_BAD_LARGE_ARRAY_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            timings[i] = duration;
-
-            // Test the reference code.
-            start = System.nanoTime();
-
-            referenceCode(JsonSamples.KNOWN_BAD_LARGE_ARRAY_SAMPLE);
-
-            end = System.nanoTime();
-
-            duration = (end - start);
-
-            referenceTimings[i] = duration;
-        }
-
-        long result = printResults("Valid JSON Array Parsing", timings);
-        long referenceResult = printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
-
-        assertTrue("JsonTools library is not faster at parsing a valid JSON array than the reference code.", referenceResult > result);
+        executeIsJsonPerformanceTest(
+                JsonSamples.KNOWN_BAD_LARGE_ARRAY_SAMPLE,
+                "Invalid JSON array Parsing",
+                "JsonTools library is not faster at parsing an invalid JSON array than the reference code."
+        );
     }
 
     /**
@@ -165,7 +53,7 @@ public class PerformanceTests {
      * @param sampleJson JSON string to test.
      * @return Whether or not the given string is JSON.
      */
-    public boolean referenceCode(String sampleJson) {
+    public static boolean referenceCode(String sampleJson) {
         try {
             new JSONObject(sampleJson);
         } catch (JSONException ex) {
@@ -194,5 +82,41 @@ public class PerformanceTests {
         System.out.println(testName + " - Completed " + timings.length + " iterations with each taking an average of " + millisElapsed + " milliseconds.");
 
         return millisElapsed;
+    }
+
+    public static void executeIsJsonPerformanceTest(String jsonSample, String testTitle, String failureMessage) {
+        long start, end, duration;
+
+        long[] timings = new long[10000];
+        long[] referenceTimings = new long[10000];
+
+        for (int i = 0; i < 10000; i++) {
+            // Test the library code.
+            start = System.nanoTime();
+
+            Is.json(jsonSample);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            timings[i] = duration;
+
+            // Test the reference code.
+            start = System.nanoTime();
+
+            referenceCode(jsonSample);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            referenceTimings[i] = duration;
+        }
+
+        long result = printResults(testTitle, timings);
+        long referenceResult = printResults(testTitle + " (Reference)", referenceTimings);
+
+        assertTrue(failureMessage, referenceResult > result);
     }
 }
