@@ -76,7 +76,7 @@ public class JsonReader {
         for (int i = 0; i < n; i++) {
             this.position++;
 
-            if (this.position > this.length) {
+            if (this.position >= this.length) {
                 result[i] = NULL;
             } else {
                 result[i] = this.text[position];
@@ -211,10 +211,10 @@ public class JsonReader {
      * @return Returns the char code for `null` if successful.
      */
     public char nextNull() {
-        while(hasNext()) {
-            switch(next()) {
+        while (hasNext()) {
+            switch (next()) {
                 case 'n':
-                    if(Arrays.equals(next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
+                    if (Arrays.equals(next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
                         return NULL;
                     }
 
