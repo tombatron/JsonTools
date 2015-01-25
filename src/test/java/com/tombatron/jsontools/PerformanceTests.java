@@ -5,6 +5,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class PerformanceTests {
 
     @Test
@@ -38,8 +40,10 @@ public class PerformanceTests {
             referenceTimings[i] = duration;
         }
 
-        printResults("Valid JSON Parsing", timings);
-        printResults("Valid JSON Parsing (Reference)", referenceTimings);
+        long result = printResults("Valid JSON Parsing", timings);
+        long referenceResult = printResults("Valid JSON Parsing (Reference)", referenceTimings);
+
+        assertTrue("JsonTools library is not faster at parsing a valid JSON object than the reference code.", referenceResult > result);
     }
 
     @Test
@@ -73,17 +77,92 @@ public class PerformanceTests {
             referenceTimings[i] = duration;
         }
 
-        printResults("Valid JSON Array Parsing", timings);
-        printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
+        long result = printResults("Valid JSON Array Parsing", timings);
+        long referenceResult = printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
+
+        assertTrue("JsonTools library is not faster at parsing a valid JSON array than the reference code.", referenceResult > result);
+    }
+
+    @Test
+    public void invalidJsonParsePerformanceTest() {
+        long start, end, duration;
+
+        long[] timings = new long[10000];
+        long[] referenceTimings = new long[10000];
+
+        for (int i = 0; i < 10000; i++) {
+            // Test the library code.
+            start = System.nanoTime();
+
+            Is.json(JsonSamples.KNOWN_BAD_LARGE_OBJECT_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            timings[i] = duration;
+
+            // Test the reference code.
+            start = System.nanoTime();
+
+            referenceCode(JsonSamples.KNOWN_BAD_LARGE_OBJECT_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            referenceTimings[i] = duration;
+        }
+
+        long result = printResults("Invalid JSON Parsing", timings);
+        long referenceResult = printResults("Invalid JSON Parsing (Reference)", referenceTimings);
+
+        assertTrue("JsonTools library is not faster at parsing an invalid JSON object than the reference code.", referenceResult > result);
+    }
+
+    @Test
+    public void invalidJsonArrayParsePerformanceTest() {
+        long start, end, duration;
+
+        long[] timings = new long[10000];
+        long[] referenceTimings = new long[10000];
+
+        for (int i = 0; i < 10000; i++) {
+            // Test the library code.
+            start = System.nanoTime();
+
+            Is.json(JsonSamples.KNOWN_BAD_LARGE_ARRAY_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            timings[i] = duration;
+
+            // Test the reference code.
+            start = System.nanoTime();
+
+            referenceCode(JsonSamples.KNOWN_BAD_LARGE_ARRAY_SAMPLE);
+
+            end = System.nanoTime();
+
+            duration = (end - start);
+
+            referenceTimings[i] = duration;
+        }
+
+        long result = printResults("Valid JSON Array Parsing", timings);
+        long referenceResult = printResults("Valid JSON Array Parsing (Reference)", referenceTimings);
+
+        assertTrue("JsonTools library is not faster at parsing a valid JSON array than the reference code.", referenceResult > result);
     }
 
     /**
      * This is reference code used to test the performance of the `Is` class.
-     *
+     * <p/>
      * http://stackoverflow.com/questions/10174898/how-to-check-whether-a-given-string-is-valid-json-in-java
      *
      * @param sampleJson JSON string to test.
-     *
      * @return Whether or not the given string is JSON.
      */
     public boolean referenceCode(String sampleJson) {
@@ -101,7 +180,7 @@ public class PerformanceTests {
         return true;
     }
 
-    public static void printResults(String testName, long[] timings) {
+    public static long printResults(String testName, long[] timings) {
         long sum = 0;
 
         for (long timing : timings) {
@@ -113,5 +192,7 @@ public class PerformanceTests {
         long millisElapsed = average / 1000;
 
         System.out.println(testName + " - Completed " + timings.length + " iterations with each taking an average of " + millisElapsed + " milliseconds.");
+
+        return millisElapsed;
     }
 }
