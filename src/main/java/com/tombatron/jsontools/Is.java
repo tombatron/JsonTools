@@ -1,6 +1,6 @@
 package com.tombatron.jsontools;
 
-import static com.tombatron.jsontools.Constants.NULL;
+import static com.tombatron.jsontools.Constants.*;
 
 public class Is {
 
@@ -18,11 +18,11 @@ public class Is {
 
         reader.back();
 
-        if (firstDelimiter == '{') {
+        if (firstDelimiter == OBJECT_BEGIN) {
             result = parseObject(reader);
         }
 
-        if (firstDelimiter == '[') {
+        if (firstDelimiter == ARRAY_BEGIN) {
             result = parseArray(reader);
         }
 
@@ -32,11 +32,12 @@ public class Is {
     private static boolean parseObject(JsonReader reader) {
         reader.back();
 
-        if (reader.nextDelimiter() == '{') {
+        if (reader.nextDelimiter() == OBJECT_BEGIN) {
             while (reader.hasNext()) {
                 switch (reader.nextDelimiter()) {
-                    case '}':
+                    case OBJECT_END:
                         return true;
+
                     case ',':
                         if (reader.hasNoValueAhead()) {
                             return false;
@@ -47,7 +48,8 @@ public class Is {
                         }
 
                         break;
-                    case '"':
+
+                    case STRING_DELIMITER:
                         reader.back();
 
                         if (reader.nextString() == null) {
@@ -57,6 +59,7 @@ public class Is {
                         break;
 
                     default:
+
                         return false;
                 }
 
@@ -71,7 +74,7 @@ public class Is {
 
             reader.back();
 
-            if (reader.next() == '}') {
+            if (reader.next() == OBJECT_END) {
                 return true;
             }
         }
@@ -81,7 +84,7 @@ public class Is {
 
     private static boolean parseValue(JsonReader reader) {
         switch (reader.nextValueDelimiter()) {
-            case '"':
+            case STRING_DELIMITER:
                 reader.back();
 
                 return reader.nextString() != null;
@@ -99,9 +102,9 @@ public class Is {
                 reader.back();
 
                 return reader.nextNumber() != null;
-            case '[':
+            case ARRAY_BEGIN:
                 return parseArray(reader);
-            case '{':
+            case OBJECT_BEGIN:
                 return parseObject(reader);
             case 't':
             case 'f':
@@ -120,13 +123,13 @@ public class Is {
     private static boolean parseArray(JsonReader reader) {
         reader.back();
 
-        if (reader.next() != '[') {
+        if (reader.next() != ARRAY_BEGIN) {
             return false;
         }
 
         while (reader.hasNext()) {
             switch (reader.next()) {
-                case ']':
+                case ARRAY_END:
                     return true;
                 case ',':
                     if (reader.hasNoValueAhead() || reader.hasNoValueBehind()) {
