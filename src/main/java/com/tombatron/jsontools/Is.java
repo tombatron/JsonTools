@@ -22,11 +22,11 @@ public class Is {
 
         reader.back();
 
-        if (firstDelimiter == '{') {
+        if (firstDelimiter == OBJECT_BEGIN) {
             result = parseObject(reader);
         }
 
-        if (firstDelimiter == '[') {
+        if (firstDelimiter == ARRAY_BEGIN) {
             result = parseArray(reader);
         }
 
@@ -36,10 +36,10 @@ public class Is {
     private static boolean parseObject(JsonReader reader) {
         reader.back();
 
-        if (reader.nextDelimiter() == '{') {
+        if (reader.nextDelimiter() == OBJECT_BEGIN) {
             while (reader.hasNext()) {
                 switch (reader.nextDelimiter()) {
-                    case '}':
+                    case OBJECT_END:
                         return true;
                     case ',':
                         if (reader.hasNoValueAhead()) {
@@ -70,7 +70,7 @@ public class Is {
 
             reader.back();
 
-            if (reader.next() == '}') {
+            if (reader.next() == OBJECT_END) {
                 return true;
             }
         }
@@ -80,7 +80,7 @@ public class Is {
 
     private static boolean parseValue(JsonReader reader) {
         switch (reader.nextValueDelimiter()) {
-            case '"':
+            case STRING_DELIMITER:
                 return parseString(reader);
             case '0':
             case '1':
@@ -94,9 +94,9 @@ public class Is {
             case '9':
             case '-':
                 return parseNumber(reader);
-            case '[':
+            case ARRAY_BEGIN:
                 return parseArray(reader);
-            case '{':
+            case ARRAY_END:
                 return parseObject(reader);
             case 't':
             case 'f':
@@ -110,10 +110,10 @@ public class Is {
     private static boolean parseString(JsonReader reader) {
         reader.back();
 
-        if (reader.nextStringDelimiter() == '"') {
+        if (reader.nextStringDelimiter() == STRING_DELIMITER) {
             while (reader.hasNext()) {
                 switch (reader.next()) {
-                    case '"':
+                    case STRING_DELIMITER:
                         return true;
                     case '\\':
                         switch (reader.next()) {
@@ -124,7 +124,7 @@ public class Is {
                             case 't':
                             case '\\':
                             case '/':
-                            case '"':
+                            case STRING_DELIMITER:
                                 break;
                             case 'u':
                                 if (!isHexDigit(reader.next())) {
@@ -227,7 +227,7 @@ public class Is {
                     switch(previousChar) {
                         case ':':
                         case ' ':
-                        case '[':
+                        case ARRAY_BEGIN:
                         case ',':
                         case '\n':
                         case '\t':
@@ -272,8 +272,8 @@ public class Is {
                     reader.back();
 
                     break;
-                case '}':
-                case ']':
+                case OBJECT_END:
+                case ARRAY_END:
                 case ',':
                     reader.back();
 
@@ -300,13 +300,13 @@ public class Is {
     private static boolean parseArray(JsonReader reader) {
         reader.back();
 
-        if (reader.next() != '[') {
+        if (reader.next() != ARRAY_BEGIN) {
             return false;
         }
 
         while (reader.hasNext()) {
             switch (reader.next()) {
-                case ']':
+                case ARRAY_END:
                     return true;
                 case ',':
                     if (reader.hasNoValueAhead() || reader.hasNoValueBehind()) {
@@ -353,8 +353,8 @@ public class Is {
                     }
 
                     break;
-                case '}':
-                case ']':
+                case OBJECT_END:
+                case ARRAY_END:
                 case ',':
                     reader.back();
 
