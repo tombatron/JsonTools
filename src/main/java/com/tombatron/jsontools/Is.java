@@ -1,5 +1,9 @@
 package com.tombatron.jsontools;
 
+import java.util.Arrays;
+
+import static com.tombatron.jsontools.JsonReader.isDigit;
+import static com.tombatron.jsontools.JsonReader.isHexDigit;
 import static com.tombatron.jsontools.Constants.*;
 
 public class Is {
@@ -18,11 +22,11 @@ public class Is {
 
         reader.back();
 
-        if (firstDelimiter == OBJECT_BEGIN) {
+        if (firstDelimiter == '{') {
             result = parseObject(reader);
         }
 
-        if (firstDelimiter == ARRAY_BEGIN) {
+        if (firstDelimiter == '[') {
             result = parseArray(reader);
         }
 
@@ -32,35 +36,27 @@ public class Is {
     private static boolean parseObject(JsonReader reader) {
         reader.back();
 
-        if (reader.nextDelimiter() == OBJECT_BEGIN) {
+        if (reader.nextDelimiter() == '{') {
             while (reader.hasNext()) {
                 switch (reader.nextDelimiter()) {
-                    case OBJECT_END:
+                    case '}':
                         return true;
-
                     case ',':
                         if (reader.hasNoValueAhead()) {
                             return false;
                         }
 
-                        if (reader.nextString() == null) {
+                        reader.next();
+
+                        if (!parseString(reader)) {
                             return false;
                         }
 
                         break;
-
-                    case STRING_DELIMITER:
-                        reader.back();
-
-                        if (reader.nextString() == null) {
-                            return false;
-                        }
-
-                        break;
-
                     default:
-
-                        return false;
+                        if (!parseString(reader)) {
+                            return false;
+                        }
                 }
 
                 if (reader.nextKeyValueDelimiter() != ':') {
@@ -74,7 +70,7 @@ public class Is {
 
             reader.back();
 
-            if (reader.next() == OBJECT_END) {
+            if (reader.next() == '}') {
                 return true;
             }
         }
@@ -84,10 +80,8 @@ public class Is {
 
     private static boolean parseValue(JsonReader reader) {
         switch (reader.nextValueDelimiter()) {
-            case STRING_DELIMITER:
-                reader.back();
-
-                return reader.nextString() != null;
+            case '"':
+                return parseString(reader);
             case '0':
             case '1':
             case '2':
@@ -99,37 +93,220 @@ public class Is {
             case '8':
             case '9':
             case '-':
-                reader.back();
-
-                return reader.nextNumber() != null;
-            case ARRAY_BEGIN:
+                return parseNumber(reader);
+            case '[':
                 return parseArray(reader);
-            case OBJECT_BEGIN:
+            case '{':
                 return parseObject(reader);
             case 't':
             case 'f':
-                reader.back();
-
-                return reader.nextBoolean() != null;
             case 'n':
-                reader.back();
-
-                return reader.nextNull() == NULL;
+                return parseConstant(reader);
             default:
                 return false;
         }
     }
 
+    private static boolean parseString(JsonReader reader) {
+        reader.back();
+
+        if (reader.nextStringDelimiter() == '"') {
+            while (reader.hasNext()) {
+                switch (reader.next()) {
+                    case '"':
+                        return true;
+                    case '\\':
+                        switch (reader.next()) {
+                            case 'b':
+                            case 'f':
+                            case 'n':
+                            case 'r':
+                            case 't':
+                            case '\\':
+                            case '/':
+                            case '"':
+                                break;
+                            case 'u':
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                if (!isHexDigit(reader.next())) {
+                                    return false;
+                                }
+
+                                break;
+                            default:
+                                return false;
+                        }
+
+                        break;
+
+                    case '\b':
+                    case '\f':
+                    case '\r':
+                    case '\t':
+                    case '\n':
+                        return false;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean parseNumber(JsonReader reader) {
+        char previousChar;
+        boolean parsingExponent = false;
+        boolean foundDigit = false;
+
+        reader.back();
+
+        while (reader.hasNext()) {
+            switch (reader.next()) {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    foundDigit = true;
+
+                    break;
+                case 'e':
+                case 'E':
+                    reader.back(2);
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    parsingExponent = true;
+
+                    break;
+                case '+':
+                    reader.back(2);
+
+                    previousChar = reader.next();
+
+                    if (!(previousChar == 'e' || previousChar == 'E')) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.back();
+
+                    break;
+                case '-':
+                    previousChar = reader.back();
+
+                    boolean isPreviousExponent = (previousChar == 'e' || previousChar == 'E');
+                    boolean isPreviousDelimiter;
+
+                    switch(previousChar) {
+                        case ':':
+                        case ' ':
+                        case '[':
+                        case ',':
+                        case '\n':
+                        case '\t':
+                        case '\r':
+                            isPreviousDelimiter = true;
+                            break;
+                        default:
+                            isPreviousDelimiter = false;
+                            break;
+                    }
+
+                    if (!(isPreviousExponent || isPreviousDelimiter)) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.back();
+
+                    break;
+                case '.':
+                    if (parsingExponent) {
+                        return false;
+                    }
+
+                    reader.back(2);
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.next();
+
+                    if (!isDigit(reader.next())) {
+                        return false;
+                    }
+
+                    reader.back();
+
+                    break;
+                case '}':
+                case ']':
+                case ',':
+                    reader.back();
+
+                    return true;
+                case ' ':
+                case '\n':
+                case '\t':
+                case '\r':
+                    if (foundDigit) {
+                        reader.back();
+
+                        return true;
+                    }
+
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        return false;
+    }
+
     private static boolean parseArray(JsonReader reader) {
         reader.back();
 
-        if (reader.next() != ARRAY_BEGIN) {
+        if (reader.next() != '[') {
             return false;
         }
 
         while (reader.hasNext()) {
             switch (reader.next()) {
-                case ARRAY_END:
+                case ']':
                     return true;
                 case ',':
                     if (reader.hasNoValueAhead() || reader.hasNoValueBehind()) {
@@ -147,6 +324,47 @@ public class Is {
                     }
 
                     break;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean parseConstant(JsonReader reader) {
+        reader.back();
+
+        while (reader.hasNext()) {
+            switch (reader.next()) {
+                case 't':
+                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_TRUE_CHARACTERS)) {
+                        return false;
+                    }
+
+                    break;
+                case 'f':
+                    if(!Arrays.equals(reader.next(4), EXPECTED_NEXT_FALSE_CHARACTERS)) {
+                        return false;
+                    }
+
+                    break;
+                case 'n':
+                    if(!Arrays.equals(reader.next(3), EXPECTED_NEXT_NULL_CHARACTERS)) {
+                        return false;
+                    }
+
+                    break;
+                case '}':
+                case ']':
+                case ',':
+                    reader.back();
+
+                    return true;
+                default:
+                    if (reader.isCurrentWhitespace()) {
+                        break;
+                    }
+
+                    return false;
             }
         }
 
